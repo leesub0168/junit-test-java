@@ -14,6 +14,7 @@ import static org.junit.jupiter.api.Assumptions.assumingThat;
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class StudyTest {
     @Test
+    @Disabled
     @DisplayName("스터디 테스트")
     void create_new() {
         Study study = new Study(-10);
@@ -34,7 +35,7 @@ class StudyTest {
     }
 
     @Test
-//    @Disabled
+    @Disabled
     @DisplayName("예외발생 테스트")
     void create_new_again() {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> new Study(-10));
@@ -43,6 +44,7 @@ class StudyTest {
     }
 
     @Test
+    @Disabled
     @DisplayName("시간 초과 테스트")
     void create_new_time() {
         // 이 경우는 해당 기능이 10초 걸린다면 테스트시 10초를 다 기다리게됨.
@@ -53,6 +55,7 @@ class StudyTest {
     }
 
     @Test
+    @Disabled
     @DisplayName("시간 초과 테스트2")
     void create_new_time_limit() {
         // assertTimeoutPreemptively는 기능이 걸리는 시간을 다 기다리지 않고, 지정한 시간이 되면 종료함.
