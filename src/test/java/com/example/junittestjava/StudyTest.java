@@ -1,12 +1,15 @@
 package com.example.junittestjava;
 
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.condition.*;
 
 import java.time.Duration;
 import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import static org.junit.jupiter.api.Assumptions.assumingThat;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class StudyTest {
@@ -64,6 +67,61 @@ class StudyTest {
     @Test
     @DisplayName("assertThat")
     void create_new_assertThat() {
+        Study actual = new Study(10);
+        assertThat(actual.getLimit()).isGreaterThan(0);
+    }
+
+    @Test
+    void create_new_assumeTrue() {
+        String test_env = System.getenv("TEST_ENV");
+        System.out.println(test_env);
+        assumeTrue("LOCAL".equalsIgnoreCase(System.getenv("TEST_ENV")));
+    }
+
+    @Test
+    @DisplayName("조건에 따라 테스트 실행")
+    void create_new_assumingThat() {
+        String test_env = System.getenv("TEST_ENV");
+        System.out.println(test_env);
+
+        assumingThat("LOCAL".equalsIgnoreCase(test_env), () -> {
+            System.out.println("local");
+            Study actual = new Study(100);
+            assertThat(actual.getLimit()).isGreaterThan(0);
+        });
+
+        assumingThat("leesoo".equalsIgnoreCase(test_env), () -> {
+            System.out.println("leesoo");
+            Study actual = new Study(10);
+            assertThat(actual.getLimit()).isGreaterThan(0);
+        });
+    }
+
+    @Test
+    @DisplayName("특정 OS에서 테스트 동작")
+    @EnabledOnOs({OS.WINDOWS, OS.MAC}) // 특정 os에서만 테스트가 동작
+    void create_new_os() {
+        System.out.println("It's Windows");
+    }
+
+    @Test
+    @DisplayName("특정 OS에서 제외처리")
+    @DisabledOnOs(OS.MAC)
+    void create_disable_os() {
+        System.out.println("It's MAC");
+    }
+
+    @Test
+    @DisplayName("특정 자바버전에서 동작")
+    @EnabledOnJre({JRE.JAVA_8, JRE.JAVA_11})
+    void create_enable_java() {
+        System.out.println("It's Java 8, Java 11");
+    }
+
+    @Test
+    @DisplayName("환경변수값이 일치할때 테스트 동작")
+    @EnabledIfEnvironmentVariable(named = "TEST_ENV", matches = "LOCAL")
+    void use_annotation_env() {
         Study actual = new Study(10);
         assertThat(actual.getLimit()).isGreaterThan(0);
     }
