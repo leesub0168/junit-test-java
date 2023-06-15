@@ -1,5 +1,6 @@
 package com.example.junittestjava;
 
+import com.example.junittestjava.domain.Study;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -37,7 +38,6 @@ public class RepeatTest {
     @ValueSource(ints = {10,20,40})
     void valueSource_test(Integer limit) {
         Study study = new Study(limit);
-        System.out.println(study.getLimit());
     }
 
     @DisplayName("ValueSource 테스트2")

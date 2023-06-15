@@ -1,5 +1,6 @@
 package com.example.junittestjava;
 
+import com.example.junittestjava.domain.Study;
 import org.junit.jupiter.api.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
