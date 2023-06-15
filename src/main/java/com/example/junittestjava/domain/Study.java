@@ -22,7 +22,7 @@ public class Study {
     private int limit;
     private String name;
     private LocalDateTime openedDateTime;
-    private Long ownerId;
+    private Member owner;
 
     public Study(int limit, String name) {
         this.limit = limit;

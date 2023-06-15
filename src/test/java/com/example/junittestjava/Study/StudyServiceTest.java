@@ -19,10 +19,14 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class StudyServiceTest {
+    @Mock
+    MemberService memberService;
+
+    @Mock
+    StudyRepository studyRepository;
 
     @Test
-    public void createStudy_Mock_stubbing_1(@Mock MemberService memberService,
-                                   @Mock StudyRepository studyRepository) throws Exception {
+    public void createStudy_Mock_stubbing_1() throws Exception {
 
         Member member = new Member();
         member.setId(1L);
@@ -54,8 +58,7 @@ class StudyServiceTest {
 
 
     @Test
-    public void createStudy_Mock_stubbing_2(@Mock MemberService memberService,
-                                            @Mock StudyRepository studyRepository) throws Exception {
+    public void createStudy_Mock_stubbing_2() throws Exception {
         StudyService studyService = new StudyService(memberService, studyRepository);
         assertNotNull(studyService);
 
@@ -76,4 +79,25 @@ class StudyServiceTest {
         assertEquals(Optional.empty(), memberService.findById(1L));
 
     }
+
+
+    @Test
+    public void createStudy_Mock_stubbing_practice() throws Exception {
+        Member member = new Member();
+        member.setId(1L);
+        member.setEmail("test@naver.com");
+
+        Study study = new Study(10, "test");
+
+        when(memberService.findById(1L)).thenReturn(Optional.of(member));
+        when(studyRepository.save(study)).thenReturn(study);
+
+        StudyService studyService = new StudyService(memberService, studyRepository);
+        studyService.creatNewStudy(1L, study);
+
+        assertEquals(member, study.getOwner());
+
+    }
+
+
 }
