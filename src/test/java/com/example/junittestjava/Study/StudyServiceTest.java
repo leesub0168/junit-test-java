@@ -5,6 +5,7 @@ import com.example.junittestjava.domain.Member;
 import com.example.junittestjava.domain.Study;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
@@ -99,5 +100,56 @@ class StudyServiceTest {
 
     }
 
+    @Test
+    public void createStudy_Mock_객체_확인() throws Exception {
+        Member member = new Member();
+        member.setId(1L);
+        member.setEmail("test@naver.com");
+
+        Study study = new Study(10, "test");
+
+        when(memberService.findById(1L)).thenReturn(Optional.of(member));
+        when(studyRepository.save(study)).thenReturn(study);
+
+        StudyService studyService = new StudyService(memberService, studyRepository);
+        studyService.creatNewStudy(1L, study);
+
+        assertEquals(member, study.getOwner());
+
+        /** notify 메소드가 호출 되었는지 확인하는 메소드 */
+        verify(memberService, times(1)).notify(study);
+        verify(memberService, times(1)).notify(member);
+
+        /** validate 메소드가 절대 호출되지 않아야 한다 */
+        verify(memberService, never()).validate(any());
+
+        /** notify-study가 호출된 후에, notify-member가 호출되야 한다. - 순서가 중요한 경우 */
+        InOrder inOrder = inOrder(memberService);
+        inOrder.verify(memberService).notify(study);
+
+    }
+
+    @Test
+    public void createStudy_Mock_객체_확인_NoMore() throws Exception {
+        Member member = new Member();
+        member.setId(1L);
+        member.setEmail("test@naver.com");
+
+        Study study = new Study(10, "test");
+
+        when(memberService.findById(1L)).thenReturn(Optional.of(member));
+        when(studyRepository.save(study)).thenReturn(study);
+
+        StudyService studyService = new StudyService(memberService, studyRepository);
+        studyService.creatNewStudy(1L, study);
+
+        assertEquals(member, study.getOwner());
+
+        verify(memberService, times(1)).findById(member.getId());
+        verify(memberService, times(1)).notify(study);
+        verifyNoMoreInteractions(memberService);
+        /** verify 이후에 더 이상의 memberService 동작이 없는지 확인 - notify(member)가 동작하기 때문에 테스트는 fail */
+
+    }
 
 }
